@@ -113,40 +113,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 ---
 
-## License
 
-This project currently has **no specified license**. This means that by default, all rights are reserved by the copyright holder (Abhii7104), and you may not legally use, distribute, or modify this code without explicit permission.
-
-It is highly recommended to add an open-source license to your repository to define how others can use, modify, and distribute your code. A common and permissive choice is the **MIT License**.
-
-To add the MIT License:
-1.  Create a new file named `LICENSE` (no extension) in the root of your repository.
-2.  Paste the following text into the `LICENSE` file, replacing `[year]` with the current year and `[fullname]` with your name or the copyright holder's name:
-
-    ```
-    MIT License
-
-    Copyright (c) [year] [fullname]
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-    ```
-3.  Commit and push the `LICENSE` file to your repository.
 
 ---
 
