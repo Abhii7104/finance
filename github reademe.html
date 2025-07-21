@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <title>Auto Creative GitHub README Generator ✨</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Mono&family=Segoe+UI&display=swap');
+
+    body {
+      background: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px 40px;
+      user-select: none;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      color: #58a6ff;
+      text-shadow: 0 0 15px #58a6ff88;
+      user-select: text;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #8b949e;
+      font-weight: 600;
+      user-select: text;
+    }
+    input[type=text] {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1.15rem;
+      border-radius: 10px;
+      border: none;
+      background: #161b22;
+      color: #c9d1d9;
+      box-shadow: inset 0 0 10px #23863644;
+      transition: box-shadow 0.3s ease;
+      margin-bottom: 1.3rem;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    input[type=text]:focus {
+      outline: none;
+      box-shadow: inset 0 0 14px #58a6ffcc;
+    }
+    button {
+      width: 100%;
+      background: linear-gradient(90deg, #238636, #2ea043);
+      border: none;
+      color: #e6edf3;
+      font-weight: 700;
+      font-size: 1.25rem;
+      padding: 14px 0;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px #2ea043aa;
+      user-select: none;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
+      margin-bottom: 1.5rem;
+    }
+    button:hover:not(:disabled) {
+      background: linear-gradient(90deg, #2ea043, #238636);
+      box-shadow: 0 8px 26px #2ea043cc;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      box-shadow: none;
+    }
+    .error {
+      text-align: center;
+      color: #f85149;
+      text-shadow: 0 0 8px #f8514999;
+      margin-bottom: 1.2rem;
+      user-select: none;
+    }
+    #repoStats {
+      background: #161b22;
+      border-radius: 14px;
+      padding: 18px 24px;
+      box-shadow: 0 0 20px #23863655;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      user-select: none;
+    }
+    #repoStats a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+    #repoStats a:hover {
+      text-decoration: underline;
+    }
+
+    textarea#readme {
+      width: 100%;
+      height: 560px;
+      background: #161b22;
+      color: #8b949e;
+      border-radius: 14px;
+      border: none;
+      font-family: 'Fira Mono', monospace;
+      font-size: 0.95rem;
+      padding: 20px;
+      box-shadow: inset 0 0 20px #23863688;
+      white-space: pre-wrap;
+      line-height: 1.4;
+      user-select: text;
+      resize: vertical;
+    }
+
+    .logos {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 1.7rem;
+      user-select: none;
+    }
+    .logo {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 0 5px #2ea043aa);
+      cursor: pointer;
+      transition: transform 0.35s ease, filter 0.35s ease;
+    }
+    .logo:hover {
+      transform: scale(1.25) rotate(10deg);
+      filter: drop-shadow(0 0 14px #58a6ffcc);
+    }
+    .logo.pulse {
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 5px #2ea043aa); }
+      50% { filter: drop-shadow(0 0 14px #58a6ffcc); }
+    }
+
+    .topic-badge {
+      display: inline-block;
+      background: #238636;
+      color: #c9f99f;
+      border-radius: 9999px;
+      padding: 7px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin: 0 8px 8px 0;
+      user-select: none;
+      cursor: default;
+      box-shadow: 0 0 16px #238636bb;
+      transition: background 0.3s ease;
+    }
+    .topic-badge:hover {
+      background: #2ea043;
+      color: #ddf5bb;
+    }
+
+    .monospace {
+      font-family: 'Fira Mono', monospace;
+    }
+
+    .section-header {
+      font-size: 1.3rem;
+      margin-bottom: 0.6rem;
+      color: #58a6ff;
+      text-shadow: 0 0 10px #58a6ffaa;
+      user-select: text;
+    }
+
+    .inline-logo {
+      width: 22px;
+      height: 22px;
+      vertical-align: middle;
+      margin-right: 5px;
+      filter: drop-shadow(0 0 3px #2ea043bb);
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <h1>Auto Creative GitHub README Generator ✨</h1>
+
+  <label for="repoUrl">GitHub Repo URL</label>
+  <input id="repoUrl" type="text" placeholder="e.g. https://github.com/facebook/react" />
+
+  <button id="generateBtn">Generate README</button>
+
+  <div class="error" id="error"></div>
+
+  <div id="repoStats" style="display:none;"></div>
+
+  <div class="logos" id="languageLogos" style="display:none"></div>
+
+  <textarea id="readme" readonly placeholder="Generated README markdown will appear here..."></textarea>
+
+  <button id="downloadBtn" style="display:none;">Download README.md</button>
+
+  <script>
+    const repoInput = document.getElementById('repoUrl');
+    const generateBtn = document.getElementById('generateBtn');
+    const errorDiv = document.getElementById('error');
+    const repoStatsDiv = document.getElementById('repoStats');
+    const readmeArea = document.getElementById('readme');
+    const languageLogosDiv = document.getElementById('languageLogos');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    const langLogos = {
+      'JavaScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+      'TypeScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
+      'Python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Java': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg',
+      'C++': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg',
+      'C#': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg',
+      'HTML': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+      'CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
+      'Go': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg',
+      'Ruby': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg',
+      'PHP': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg',
+      'Swift': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg',
+      'Kotlin': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg',
+      'Rust': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg',
+      'Dockerfile': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+      'Shell': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg',
+      'Makefile': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/makefile/makefile-original.svg'
+    };
+
+    function badge(label, message, color = "238636") {
+      return `![${label}](https://img.shields.io/badge/${encodeURIComponent(label)}-${encodeURIComponent(message)}-${color})`;
+    }
+    function socialBadge(type, owner, repo) {
+      switch(type) {
+        case 'stars': return `![GitHub stars](https://img.shields.io/github/stars/${owner}/${repo}?style=social&color=238636)`;
+        case 'forks': return `![GitHub forks](https://img.shields.io/github/forks/${owner}/${repo}?style=social&color=238636)`;
+        case 'watchers': return `![GitHub watchers](https://img.shields.io/github/watchers/${owner}/${repo}?style=social&color=238636)`;
+        case 'issues': return `![GitHub issues](https://img.shields.io/github/issues/${owner}/${repo}?color=238636)`;
+        default: return '';
+      }
+    }
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+    }
+
+    async function fetchJson(url, headers = {}) {
+      const res = await fetch(url, {headers});
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText} at ${url}`);
+      return res.json();
+    }
+
+    async function fetchContributors(owner, repo) {
+      let contributors = [];
+      let page = 1;
+      while(page < 5) { // limit pages for performance
+        try {
+          const data = await fetchJson(`https://api.github.com/repos/${owner}/${repo}/contributors?per_page=100&page=${page}`);
+          if(!data.length) break;
+          contributors = contributors.concat(data);
+          if(data.length < 100) break;
+          page++;
+        } catch(e) {
+          break;
+        }
+      }
+      return contributors;
+    }
+
+    generateBtn.onclick = async () => {
+      const url = repoInput.value.trim();
+      errorDiv.textContent = '';
+      readmeArea.value = '';
+      repoStatsDiv.style.display = 'none';
+      languageLogosDiv.style.display = 'none';
+      languageLogosDiv.innerHTML = '';
+      downloadBtn.style.display = 'none';
+
+      if (!url) {
+        errorDiv.textContent = 'Please enter a GitHub repository URL.';
+        return;
+      }
+      let match = url.match(/github\.com\/([^\/]+)\/([^\/]+)(\/|$)/);
+      if (!match) {
+        errorDiv.textContent = 'Invalid GitHub repo URL format.';
+        return;
+      }
+      const owner = match[1];
+      const repo = match[2];
+
+      generateBtn.disabled = true;
+      try {
+        // Fetch repo data, langs, topics and contributors in parallel
+        const [repoData, langData, topicsData, contributorsData] = await Promise.all([
+          fetchJson(`https://api.github.com/repos/${owner}/${repo}`),
+          fetchJson(`https://api.github.com/repos/${owner}/${repo}/languages`).catch(() => ({})),
+          fetchJson(`https://api.github.com/repos/${owner}/${repo}/topics`, {Accept: 'application/vnd.github.mercy-preview+json'}).catch(() => ({names: []})),
+          fetchContributors(owner, repo).catch(() => []),
+        ]);
+
+        // Show repo stats
+        repoStatsDiv.style.display = 'block';
+        repoStatsDiv.innerHTML = `
+          <strong>${repoData.full_name}</strong> by <a href="https://github.com/${owner}" target="_blank" rel="noopener">${owner}</a><br/>
+          ⭐ Stars: <strong>${repoData.stargazers_count}</strong> &nbsp;&nbsp;|&nbsp;&nbsp; 🍴 Forks: <strong>${repoData.forks_count}</strong> &nbsp;&nbsp;|&nbsp;&nbsp; 🐛 Open Issues: <strong>${repoData.open_issues_count}</strong><br/>
+          🔄 Last Updated: <strong>${new Date(repoData.updated_at).toLocaleString()}</strong>
+        `;
+
+        // Language logos
+        const langs = Object.keys(langData).sort((a,b) => langData[b]-langData[a]);
+        if(langs.length){
+          languageLogosDiv.style.display = 'flex';
+          langs.forEach(lang => {
+            if(langLogos[lang]){
+              const img = document.createElement('img');
+              img.src = langLogos[lang];
+              img.alt = lang;
+              img.title = lang;
+              img.className = 'logo pulse';
+              languageLogosDiv.appendChild(img);
+            }
+          });
+        }
+
+        const totalBytes = Object.values(langData).reduce((a,b) => a+b, 0);
+        const langSummary = langs.length > 0
+          ? langs.map(lang => {
+            const pct = ((langData[lang]/totalBytes)*100).toFixed(1);
+            return `- ![${lang}](${langLogos[lang] || ''} "${lang} logo") **${lang}** — ${pct}%`;
+          }).join('\n') + '\n'
+          : '- Not detected.\n';
+
+        const features = topicsData.names.length
+          ? topicsData.names.map(t => `\`#${t}\``).join(' ')
+          : '_No feature tags available._';
+
+        const licenseName = repoData.license ? repoData.license.spdx_id || repoData.license.name : 'None';
+
+        // Contributors list markdown, top 8 contributors only to keep it clean
+        const contributorsMd = contributorsData.length
+          ? contributorsData.slice(0,8).map(c => `- [@${c.login}](${c.html_url})`).join('\n') + (contributorsData.length > 8 ? `\n- ...and ${contributorsData.length - 8} more` : '')
+          : '_No contributors found._';
+
+        // Generate README markdown
+        const md = `# ${repoData.name}
+
+${socialBadge('stars', owner, repo)} ${socialBadge('forks', owner, repo)} ${socialBadge('watchers', owner, repo)} ${socialBadge('issues', owner, repo)} ${licenseName !== 'None' ? badge('License', licenseName) : ''}
+
+> ${repoData.description || "A fantastic open-source project!"}
+
+---
+
+## 📋 Table of Contents
+- [Project Overview](#🚀-project-overview)
+- [Features](#✨-features)
+- [Tech Stack](#🛠️-tech-stack)
+- [Contributors](#👥-contributors)
+- [License](#📄-license)
+
+## 🚀 Project Overview
+
+${repoData.description || 'No description provided.'}
+
+## ✨ Features
+
+${features}
+
+## 🛠️ Tech Stack
+
+${langSummary}
+
+## 👥 Contributors
+
+${contributorsMd}
+
+## 📄 License
+
+This project is licensed under the **${licenseName}** license.
+
+---
+
+*Generated by Auto Creative GitHub README Generator*`;
+
+        readmeArea.value = md;
+        downloadBtn.style.display = 'block';
+
+      } catch(err) {
+        errorDiv.textContent = 'Error fetching repo data: ' + err.message;
+        repoStatsDiv.style.display = 'none';
+        languageLogosDiv.style.display = 'none';
+        readmeArea.value = '';
+        downloadBtn.style.display = 'none';
+      } finally {
+        generateBtn.disabled = false;
+      }
+    };
+
+    downloadBtn.onclick = () => {
+      const content = readmeArea.value;
+      if(!content) return;
+
+      const blob = new Blob([content], {type: 'text/markdown'});
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'README.md';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
