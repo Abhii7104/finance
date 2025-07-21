@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Live Finance Dashboard</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef2f7;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .dashboard {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 20px;
+  }
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  .results {
+    margin-top: 15px;
+    font-size: 1.4em;
+    font-weight: 700;
+  }
+  .expense-category {
+    margin-bottom: 12px;
+  }
+  svg {
+    display: block;
+    margin: 20px auto 0;
+    max-width: 280px;
+    max-height: 280px;
+  }
+  .legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 10px;
+  }
+  .color-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    margin-right: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Live Monthly Finance Dashboard</h1>
+
+<div class="dashboard">
+
+  <div class="card">
+    <label for="income">Monthly Income ($):</label>
+    <input type="number" id="income" placeholder="Enter monthly income" min="0" value="5000" />
+  </div>
+
+  <div class="card" style="grid-column: 1 / -1;">
+    <h3>Expenses</h3>
+
+    <div class="expense-category">
+      <label for="rent">Rent / Mortgage ($):</label>
+      <input type="number" id="rent" min="0" value="1500" />
+    </div>
+
+    <div class="expense-category">
+      <label for="food">Food / Groceries ($):</label>
+      <input type="number" id="food" min="0" value="600" />
+    </div>
+
+    <div class="expense-category">
+      <label for="transport">Transport ($):</label>
+      <input type="number" id="transport" min="0" value="300" />
+    </div>
+
+    <div class="expense-category">
+      <label for="utilities">Utilities ($):</label>
+      <input type="number" id="utilities" min="0" value="200" />
+    </div>
+
+    <div class="expense-category">
+      <label for="entertainment">Entertainment ($):</label>
+      <input type="number" id="entertainment" min="0" value="250" />
+    </div>
+  </div>
+
+  <div class="card">
+    <label for="savings">Savings ($):</label>
+    <input type="number" id="savings" min="0" value="800" />
+  </div>
+
+  <div class="card" style="grid-column: 1 / -1; text-align: center;">
+    <div>Total Expenses: <span id="totalExpenses" class="results">$0</span></div>
+    <div>Total Revenue (Income - Expenses): <span id="totalRevenue" class="results">$0</span></div>
+    <div>Savings Percentage: <span id="savingsPercent" class="results">0%</span></div>
+    <div>Remaining Balance: <span id="remainingBalance" class="results">$0</span></div>
+
+    <svg id="expenseChart" viewBox="0 0 32 32" width="280" height="280" aria-label="Expenses Pie Chart"></svg>
+
+    <div class="legend" id="legend"></div>
+  </div>
+</div>
+
+<script>
+  const incomeInput = document.getElementById('income');
+  const savingsInput = document.getElementById('savings');
+
+  const expenseIds = ['rent', 'food', 'transport', 'utilities', 'entertainment'];
+  const expenseInputs = expenseIds.map(id => document.getElementById(id));
+
+  const totalExpensesEl = document.getElementById('totalExpenses');
+  const totalRevenueEl = document.getElementById('totalRevenue');
+  const savingsPercentEl = document.getElementById('savingsPercent');
+  const remainingBalanceEl = document.getElementById('remainingBalance');
+
+  const expenseChart = document.getElementById('expenseChart');
+  const legend = document.getElementById('legend');
+
+  // Colors for pie slices
+  const colors = ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6'];
+
+  function calculateAndUpdate() {
+    const income = parseFloat(incomeInput.value) || 0;
+    const savings = parseFloat(savingsInput.value) || 0;
+
+    const expenses = expenseInputs.map(input => parseFloat(input.value) || 0);
+
+    const totalExpenses = expenses.reduce((a,b) => a + b, 0);
+
+    const totalRevenue = income - totalExpenses;
+
+    const savingsPercent = income > 0 ? (savings / income) * 100 : 0;
+
+    const remainingBalance = income - totalExpenses - savings;
+
+    // Update text
+    totalExpensesEl.textContent = `$${totalExpenses.toFixed(2)}`;
+    totalRevenueEl.textContent = `$${totalRevenue.toFixed(2)}`;
+    savingsPercentEl.textContent = `${savingsPercent.toFixed(2)}%`;
+    remainingBalanceEl.textContent = `$${remainingBalance.toFixed(2)}`;
+
+    drawPieChart(expenses, colors, expenseIds);
+  }
+
+  function drawPieChart(values, colors, labels) {
+    const total = values.reduce((a,b) => a + b, 0);
+    expenseChart.innerHTML = '';
+    legend.innerHTML = '';
+
+    if (total === 0) {
+      expenseChart.innerHTML = '<text x="16" y="16" text-anchor="middle" alignment-baseline="middle" fill="#888" font-size="3">No expenses</text>';
+      return;
+    }
+
+    let cumulativePercent = 0;
+
+    values.forEach((value, i) => {
+      if (value === 0) return;
+
+      const percent = value / total;
+      const [startX, startY] = getCoordinatesForPercent(cumulativePercent);
+      cumulativePercent += percent;
+      const [endX, endY] = getCoordinatesForPercent(cumulativePercent);
+
+      // If slice is full circle
+      const largeArcFlag = percent > 0.5 ? 1 : 0;
+
+      // Path for slice
+      const pathData = [
+        `M 16 16`, // Move to center
+        `L ${startX} ${startY}`, // Line to start point on circumference
+        `A 16 16 0 ${largeArcFlag} 1 ${endX} ${endY}`, // Arc
+        'Z' // Close path back to center
+      ].join(' ');
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', pathData);
+      path.setAttribute('fill', colors[i]);
+      expenseChart.appendChild(path);
+
+      // Legend item
+      const legendItem = document.createElement('div');
+      legendItem.className = 'legend-item';
+      const colorBox = document.createElement('div');
+      colorBox.className = 'color-box';
+      colorBox.style.backgroundColor = colors[i];
+      legendItem.appendChild(colorBox);
+
+      const labelText = document.createElement('span');
+      labelText.textContent = `${labels[i]}: $${value.toFixed(2)}`;
+      legendItem.appendChild(labelText);
+
+      legend.appendChild(legendItem);
+    });
+  }
+
+  // Helper function to convert percentage to SVG circle coords
+  function getCoordinatesForPercent(percent) {
+    const x = Math.cos(2 * Math.PI * percent - Math.PI / 2) * 16 + 16;
+    const y = Math.sin(2 * Math.PI * percent - Math.PI / 2) * 16 + 16;
+    return [x, y];
+  }
+
+  // Attach event listeners to all inputs for live update
+  [...expenseInputs, incomeInput, savingsInput].forEach(input => {
+    input.addEventListener('input', calculateAndUpdate);
+  });
+
+  // Initial calculation on page load
+  calculateAndUpdate();
+</script>
+
+</body>
+</html>
